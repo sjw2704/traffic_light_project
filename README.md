@@ -2,6 +2,9 @@
 ## 프로젝트 개요
 이 프로젝트는 아두이노를 이용해 신호등 시스템을 구현하고, p5.js를 활용해 시스템 상태를 모니터링하고 제어할 수 있도록 설계되었습니다. LED 신호등을 구성하는 기본 기능 외에도 가변저항을 이용한 밝기 조절, 버튼을 통한 특정 기능 수행, p5.js에서의 슬라이더를 통한 깜빡임 주기 조절이 포함되어 있습니다.
 ## 시연 영상
+https://youtu.be/ErtKyu7EJTQ?si=XMcCvWNtmhpKpsmA
+[![IMG_919780800AD1-1](https://github.com/user-attachments/assets/ddd2dbb5-5e78-4b77-93d7-8d0f62259aac)](https://youtu.be/ErtKyu7EJTQ?si=XMcCvWNtmhpKpsmA)
+
 다음은 프로젝트 시연 영상입니다. 
 
 ## 주요 기능
