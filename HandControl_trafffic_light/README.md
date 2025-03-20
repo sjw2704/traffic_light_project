@@ -128,6 +128,8 @@ function draw_PeriodIndicator(){
 - 슬라이더로 값을 조절하는 것이 아닌, 손동작을 통해 주기를 조절하기 때문에 값이 변함에 따라 시각적으로 표현해주는 직선 인디케이터를 제작함.
 
 ### UI
+<img src= "https://github.com/sjw2704/traffic_light_project/blob/main/HandControl_trafffic_light/p5/img/UI.png" width="600" />
+- 기존에 제작했던 UI와 더불어 카메라를 배치함으로써 손동작이 잘 인식되고 있는지 확인하도록 함
 
 ## 시스템 구성
 ### 하드웨어 구성
@@ -163,6 +165,4 @@ function draw_PeriodIndicator(){
   Serial 데이터 수신 및 송신
 
   UI 구성
-
-  슬라이더를 통한 깜빡임 주기 조절
 
