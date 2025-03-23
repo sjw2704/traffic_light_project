@@ -20,6 +20,9 @@ let port;
  let hands = [];
  let v_width = 640;
  let v_height = 480;
+ let pose = 'none';
+ let CtoU = 0;
+ let UtoB = 0;
 
  //핸드포즈 모델 로드
  function preload(){
@@ -79,6 +82,10 @@ let port;
   draw_LevelIndicator();// LED_Level에 따라서 원형 인디케이터 그리기
   draw_Hand(); // 비디오에 손 Landmarks 표시하기
 
+  fill(50);
+  textSize(20);
+  text("POSE : " + pose, 575, 45);
+
  }
 
 //========================= Serial 통신 및 UI 제어 함수 =========================
@@ -87,6 +94,7 @@ let port;
   let n = port.available(); // 시리얼 포트로부터 수신된 데이터의 바이트 수
   if(n > 0){
     let str = port.readUntil("\n"); // 줄바꿈 문자가 나올 때까지 읽기
+    textSize(15);
     fill(150);// 텍스트 색상 설정
     text("msg: " + str, 25, 257); // 수신된 메시지 표시
 
@@ -154,9 +162,6 @@ let port;
   text("Lightness", 425, 45);
   text("Serial", 445, 230);
   text("MSG", 25, 230);
-
-  fill(250);
-  textSize(20);
   text("TRAFFIC LIGHT", 25, 400-100);
 
   fill(150);
@@ -307,9 +312,14 @@ function detecting_Hand()
       let isThumbDownX = thumbTip.x < thumbBase.x; // 엄지 위로 펴짐
     
     //손동작을 구분해주는 함수들을 호출함
+    CtoU = 0;
+    UtoB = 0;
     HandForColor(isIndexUp,isMiddleUp,isMiddleDown,isRingUp,isRingDown,isPinkyUp,isPinkyDown,isThumbDownX);
     HandForUpDown(isIndexDownX,isMiddleDownX,isRingDownX,isPinkyDownX,isThumbUp,isThumbDown);
     HandForButton(isIndexUp,isIndexDown,isMiddleUp,isMiddleDown,isRingUp,isRingDown,isPinkyUp,isThumbDown);
+  }
+  else{
+    pose = 'none';
   }
 }
 
@@ -318,23 +328,27 @@ function HandForColor(isIndexUp,isMiddleUp,isMiddleDown,isRingUp,isRingDown,isPi
   //LED 주기를 조절하기 위해 색상을 선택하는 손동작을 구분하는 함수
   if (isIndexUp && isMiddleDown && isRingDown && isPinkyDown && isThumbDownX) {
     console.log("Select Red");
+    pose = 'Red';
     period_Color = "Red";
   }
   else if (isIndexUp && isMiddleUp && isRingDown && isPinkyDown && isThumbDownX) {
     console.log("Select Yellow");
+    pose = 'Yellow';
     period_Color = "Yellow";
   }
   else if (isIndexUp && isMiddleUp && isRingUp && isPinkyDown && isThumbDownX) {
-    console.log("Select = Green"); 
+    console.log("Select Green"); 
+    pose = 'Green';
     period_Color = "Green";
   }
 }
 
 function HandForUpDown(isIndexDownX,isMiddleDownX,isRingDownX,isPinkyDownX,isThumbUp,isThumbDown)
 {
-  //주기를 늘이거나 줄이는 손동작을 구분하는 함수    
-  if (isIndexDownX && isMiddleDownX && isRingDownX && isPinkyDownX && isThumbUp) {
-        console.log("Period Up"); 
+  //주기를 늘이거나 줄이는 손동작을 구분하는 함수
+    if (isIndexDownX && isMiddleDownX && isRingDownX && isPinkyDownX && isThumbUp) {
+        console.log("Period Up");
+        pose = "Period Up";
         if(period_Color == "Red" && period_R >= 500 && period_R < 5000){
           period_R = period_R + p_Unit; // p_Unit만큼 주기를 늘임
           changePeriod_R(); // 아두이노로 주기값을 전송하는 함수를 호출함
@@ -350,6 +364,7 @@ function HandForUpDown(isIndexDownX,isMiddleDownX,isRingDownX,isPinkyDownX,isThu
       }
       else if (isIndexDownX && isMiddleDownX && isRingDownX && isPinkyDownX && isThumbDown) {
         console.log("Period Down");
+        pose = "Period Down";
         if(period_Color == "Red" && period_R > 500 && period_R <= 5000){
           period_R = period_R - p_Unit; // p_Unit만큼 주기를 줄임
           changePeriod_R();
@@ -367,19 +382,22 @@ function HandForUpDown(isIndexDownX,isMiddleDownX,isRingDownX,isPinkyDownX,isThu
 
 function HandForButton(isIndexUp,isIndexDown,isMiddleUp,isMiddleDown,isRingUp,isRingDown,isPinkyUp,isThumbDown)
 {
-  //어떤 모드를 설정할 것인지 해당 손동작을 구분하는 함수    
-  if (isIndexDown && isMiddleUp && isRingUp && isPinkyUp) {
+  //어떤 모드를 설정할 것인지 해당 손동작을 구분하는 함수
+    if (isIndexDown && isMiddleUp && isRingUp && isPinkyUp) {
         console.log("emergency button");//응급 버튼
+        pose = "emergency button";
         port.write("E\n");//아두이노로 모드 설정 값 전송
       }
       else if (isIndexUp && isMiddleDown && isRingUp && isPinkyUp) {
         console.log("OnOff button");//온오프 버튼
+        pose = "OnOff button";
         port.write("O\n");
       }
       else if (isIndexUp && isMiddleUp && isRingDown && isPinkyUp) {
         console.log("blinking button");//깜빡임 버튼
+        pose = "blinking button";
         port.write("B\n");
-      }  
+      }
 }
 
 // 손이 감지될 때마다 호출되는 콜백 함수
