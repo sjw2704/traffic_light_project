@@ -47,10 +47,22 @@ void CheckSerialInput() { // Serial 통신을 통해 주기값을 변경하는 �
 #### 기능 변경
 1. 손동작을 통해서 각 LED 주기를 변경할 수 있도록 함 (색상을 손동작으로 선택 후, 주기 조절 손동작을 통해 변경함)
 2. 손동작을 통해서 신호등의 모드를 변경할 수 있도록 함
-#### 손동작 설명(오른손 기준)
+#### 손동작 설명
 | RED | YELLOW | GREEN | Period Up | Period Down | Emergency Button | OnOff Button | Blinking Button |
 |--|--|--|--|--|--|--|--|
 |<img src= "https://github.com/sjw2704/traffic_light_project/blob/main/HandControl_trafffic_light/p5/img/red.jpg" width="200" />|<img src= "https://github.com/sjw2704/traffic_light_project/blob/main/HandControl_trafffic_light/p5/img/yellow.jpg" width="200" />|<img src= "https://github.com/sjw2704/traffic_light_project/blob/main/HandControl_trafffic_light/p5/img/green.jpg" width="200" />|<img src= "https://github.com/sjw2704/traffic_light_project/blob/main/HandControl_trafffic_light/p5/img/up.jpg" width="200" />|<img src= "https://github.com/sjw2704/traffic_light_project/blob/main/HandControl_trafffic_light/p5/img/down.jpg" width="200" />|<img src= "https://github.com/sjw2704/traffic_light_project/blob/main/HandControl_trafffic_light/p5/img/Eb.jpg" width="200" />|<img src= "https://github.com/sjw2704/traffic_light_project/blob/main/HandControl_trafffic_light/p5/img/Ob.jpg" width="200" />|<img src= "https://github.com/sjw2704/traffic_light_project/blob/main/HandControl_trafffic_light/p5/img/Bb.jpg" width="200" />|
+#### 사용방법 및 주의 사항
+- 오른손으로 인식을 시켜야 오류가 적음
+- LED 주기를 조절하기 위해서는 먼저 조절하고 싶은 LED 색상에 맞는 손 동작을 인식시켜야 함
+- LED 주기 단위 조절 방법
+```java
+let p_Unit = 500; // 초기화 한 값만큼 주기가 증가하고 감소합니다
+```
+- 손 인식 주기 조절 방법
+```java
+setInterval(detecting_Hand, 1500); // 1500ms 마다 손 동작을 인식합니다. 값을 조절하여 인식 주기를 조절할 수 있습니다. 
+```
+
 #### 주요 코드 추가 및 변경
 **detecting_Hand()**
   
@@ -134,13 +146,17 @@ function draw_PeriodIndicator(){
 ## 시스템 구성
 ### 하드웨어 구성
 ![Screenshot 2025-03-15 at 2 31 31 AM](https://github.com/user-attachments/assets/0e2ea0e3-c5ec-4013-8a9a-ebf9c96dc8e8)
-- 아두이노 보드
-- 빨간색 LED(11번 PIN), 노란색 LED(10번 PIN), 초록색 LED(9번 PIN)
-- 가변저항(A0 PIN)
-- Emergency 버튼(2번 PIN)
-- OnOff 버튼(3번 PIN)
-- Blinking 버튼(4번 PIN)
-- 저항 및 배선
+
+| 부품             | 세부사항    |
+|------------------|-------------|
+| 아두이노         | -           |
+| 빨간색 LED       | 11번 PIN    |
+| 노란색 LED       | 10번 PIN    |
+| 초록색 LED       | 9번 PIN     |
+| 가변저항         | A0 PIN      |
+| Emergency 버튼   | 2번 PIN     |
+| OnOff 버튼       | 3번 PIN     |
+| Blinking 버튼    | 4번 PIN     |
 
 ![IMG_9863](https://github.com/user-attachments/assets/0ba30539-9682-4fe4-a325-22244b90b11b)
 실제 회로도 구성입니다.
@@ -165,4 +181,6 @@ function draw_PeriodIndicator(){
   Serial 데이터 수신 및 송신
 
   UI 구성
+
+  손 인식
 
